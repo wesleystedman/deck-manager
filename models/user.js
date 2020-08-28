@@ -6,6 +6,8 @@ const userSchema = new Schema({
     email: String,
     googleId: String,
     // decks: [{type: Schema.Types.ObjectId, ref: 'Deck'}]
+}, {
+    timestamps:true
 });
 
 module.exports = mongoose.model('User', userSchema);
