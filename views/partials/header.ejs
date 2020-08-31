@@ -1,10 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deck Manager</title>
     <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
+
 <body>
-    <a href="/">HOME</a>
+    <nav>
+        <a href="/">Home</a>
+        <a href="">My Decks</a>
+        <a href="">Add Deck</a>
+        <a href="">Public Decks</a>
+        <% if (user) { %>
+        <div>Logged in as Username</div>
+        <a href="/logout">Log Out</a>
+        <% } else { %>
+        <a href="/auth/google">Log In with Google</a>
+        <% } %>
+    </nav>
