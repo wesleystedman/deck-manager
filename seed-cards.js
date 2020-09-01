@@ -18,7 +18,7 @@ function parseScryfall(uri) {
                     if (err) console.log(err);
                 });
             });
-            console.log(`Processed page ${++pageCount}`);
+            console.log(`Processed page ${++pageCount} of ${Math.ceil(dataPage.total_cards / 175)}`);
             if (dataPage.has_more) {
                 setTimeout(() => {
                     parseScryfall(dataPage.next_page);
