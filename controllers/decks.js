@@ -33,30 +33,44 @@ function create(req, res) {
     console.log(req.body);
     // process input - convert card names to cards, etc.
     const deck = {};
+    const promises = [];
     deck.name = req.body.name;
     deck.format = req.body.format.toLowerCase();
     if (req.body.deckTile) {
-        validateCardLine(req.body.deckTile)
-            .then(cQPair => { deck.deckTile = cQPair })
-            .catch(err => { console.log(err) });
+        const p = validateCardLine(req.body.deckTile);
+        promises.push(p);
+        p.then(cQPair => { deck.deckTile = cQPair })
+            .catch(err => { console.log(err, 'deckTile') });
     }
     if (req.body.companion) {
-        validateCardLine(req.body.companion)
-            .then(cQPair => { deck.companion = cQPair })
-            .catch(err => { console.log(err) });
+        const p = validateCardLine(req.body.companion);
+        promises.push(p);
+        p.then(cQPair => { deck.companion = cQPair })
+            .catch(err => { console.log(err, 'companion') });
     }
     for (const prop of ['commandZone', 'mainDeck', 'sideboard', 'maybeboard']) {
         if (req.body[prop]) {
             deck[prop] = [];
-            const lines = req.body[prop].split('\\r\\n');
+            const lines = req.body[prop].split('\r\n');
             lines.forEach(line => {
-                validateCardLine(line)
-                    .then(cQPair => { deck[prop].push(cQPair) })
-                    .catch(err => { console.log(err) });
+                const p = validateCardLine(line);
+                promises.push(p);
+                p.then(cQPair => { deck[prop].push(cQPair) })
+                    .catch(err => { console.log(err, prop) });
             });
         }
     }
     // add new deck to DB
+    Promise.all(promises)
+        .then(() => {
+            console.log('reached end of validation', deck);
+
+        })
+        .catch(err => {
+            // send user back to the form 
+            //  - with values intact
+            //  - with messaging regarding errors
+        })
 }
 
 function edit(req, res) {
@@ -79,7 +93,7 @@ function deleteDeck(req, res) {
 // returns null if format is wrong or card does not exist
 function validateCardLine(line) {
     const matches = line.match(DECK_LINE_REGEX);
-    if (!matches) return new Promise((resolve, reject) => { reject('Wrong line format') });
+    if (!matches) return new Promise((resolve, reject) => { reject(`Wrong line format: ${line}`) });
 
     const filterQuery = {};
     filterQuery.name = matches[3];
@@ -90,7 +104,7 @@ function validateCardLine(line) {
         Card.findOne(filterQuery, (err, card) => {
             if (err) reject(err);
             resolve({
-                quantity: matches[2] ? matches[2] : 1,
+                quantity: matches[2] ? parseInt(matches[2], 10) : 1,
                 card: card._id
             });
         });
