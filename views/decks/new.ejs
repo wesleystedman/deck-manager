@@ -1,5 +1,40 @@
 <%- include('../partials/header') %>
 
+<!-- quick import button -->
+<!-- upload log button -->
+<!-- form w/ big text box -->
+<form action="/decks" method="post">
+    <label>Deck Name:
+        <input type="text" name="name" autocomplete="off" required>
+    </label><br>
+    <label>Format:
+        <!-- <select name="format"></select> -->
+        <input type="text" name="format" autocomplete="off">
+    </label><br>
+    <label>Deckbox Card Image:
+        <input type="text" name="deckTile" autocomplete="off">
+    </label><br>
+    <label>Companion:
+        <input type="text" name="companion" autocomplete="off">
+    </label><br>
+    <label>Commander(s):
+        <textarea name="commandZone" autocomplete="off"></textarea>
+    </label><br>
+    <label>Main Deck:
+        <textarea name="mainDeck" autocomplete="off"></textarea>
+    </label><br>
+    <label>Sideboard:
+        <textarea name="sideboard" autocomplete="off"></textarea>
+    </label><br>
+    <label>Maybeboard:
+        <textarea name="maybeboard" autocomplete="off"></textarea>
+    </label><br>
+    <button type="submit">Add Deck</button>
+</form>
 
 
+
+
+
+<br><br><br><br><br><br><br><br><br><br>
 <%- include('../partials/footer') %>
