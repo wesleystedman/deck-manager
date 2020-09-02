@@ -1,6 +1,6 @@
 const Deck = require('../models/deck');
 const Card = require('../models/card');
-const DECK_LINE_REGEX = /^\s*((\d+)\s*)?([A-Za-z '’,/-]+)(\s*\(([A-Za-z0-9]+)\)(\s*(\d+))?)?\s*$/;
+const DECK_LINE_REGEX = /^\s*((\d+)\s+)?([A-Za-z '’,/-]+)(\s+\(([A-Za-z0-9]+)\)(\s+(\d+))?)?\s*$/;
 
 module.exports = {
     index,
