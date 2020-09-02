@@ -26,6 +26,7 @@ function newDeck(req, res) {
     res.render('decks/new');
 }
 
+// TODO: add 'clipboard entry' form handling
 function create(req, res) {
     for (let key in req.body) {
         if (req.body[key] === '') delete req.body[key];
@@ -62,6 +63,7 @@ function create(req, res) {
             });
         }
     }
+    // TODO: ignore /^Card not found:/ rejections?
     Promise.all(promises)
         .then(() => {
             console.log('Validation successful!', deck);
