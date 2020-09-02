@@ -1,6 +1,6 @@
 const Deck = require('../models/deck');
 const Card = require('../models/card');
-const DECK_LINE_REGEX = /^\s*((\d+)\s+)?([A-Za-z '’,/-]+)(\s+\(([A-Za-z0-9]+)\)(\s+(\d+))?)?\s*$/;
+const DECK_LINE_REGEX = /^\s*((\d+)\s+)?([A-Za-z '’,/-]+?)(\s+\(([A-Za-z0-9]+)\)(\s+(\d+))?)?\s*$/;
 
 module.exports = {
     index,
@@ -53,10 +53,12 @@ function create(req, res) {
             deck[prop] = [];
             const lines = req.body[prop].split('\r\n');
             lines.forEach(line => {
-                const p = validateCardLine(line);
-                promises.push(p);
-                p.then(cQPair => { deck[prop].push(cQPair) })
-                    .catch(err => { console.log(err, prop) });
+                if (line !== '') {
+                    const p = validateCardLine(line);
+                    promises.push(p);
+                    p.then(cQPair => { deck[prop].push(cQPair) })
+                        .catch(err => { console.log(err, prop) });
+                }
             });
         }
     }
