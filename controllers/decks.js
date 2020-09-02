@@ -35,17 +35,17 @@ function create(req, res) {
     const deck = {};
     const promises = [];
     deck.name = req.body.name;
-    deck.format = req.body.format.toLowerCase();
+    if (req.body.format) deck.format = req.body.format.toLowerCase();
     if (req.body.deckTile) {
         const p = validateCardLine(req.body.deckTile);
         promises.push(p);
-        p.then(cQPair => { deck.deckTile = cQPair })
+        p.then(cQPair => { deck.deckTile = cQPair.card })
             .catch(err => { console.log(err, 'deckTile') });
     }
     if (req.body.companion) {
         const p = validateCardLine(req.body.companion);
         promises.push(p);
-        p.then(cQPair => { deck.companion = cQPair })
+        p.then(cQPair => { deck.companion = cQPair.card })
             .catch(err => { console.log(err, 'companion') });
     }
     for (const prop of ['commandZone', 'mainDeck', 'sideboard', 'maybeboard']) {
@@ -60,17 +60,25 @@ function create(req, res) {
             });
         }
     }
-    // add new deck to DB
     Promise.all(promises)
         .then(() => {
-            console.log('reached end of validation', deck);
-
+            console.log('Validation successful!', deck);
+            // add new deck to DB
+            Deck.create(deck, err => {
+                if (err) {
+                    console.log(err);
+                    return res.redirect('/decks/new');
+                }
+                res.redirect('/decks');
+            });
         })
         .catch(err => {
-            // send user back to the form 
+            console.log('Validation failed!', err);
+            // send user back to the form
             //  - with values intact
             //  - with messaging regarding errors
-        })
+            res.redirect('/decks/new');
+        });
 }
 
 function edit(req, res) {
@@ -94,20 +102,24 @@ function deleteDeck(req, res) {
 function validateCardLine(line) {
     const matches = line.match(DECK_LINE_REGEX);
     if (!matches) return new Promise((resolve, reject) => { reject(`Wrong line format: ${line}`) });
-
+    // console.log('matches', matches);
     const filterQuery = {};
-    filterQuery.name = matches[3];
-    if (matches[5]) filterQuery.set = matches[5];
+    filterQuery.name = new RegExp(matches[3], 'i');
+    // console.log(filterQuery.name);
+    if (matches[5]) filterQuery.set = new RegExp(matches[5], 'i');
     if (matches[7]) filterQuery.collector_number = matches[7];
-
+    // console.log('filterQuery', filterQuery);
     return new Promise((resolve, reject) => {
         Card.findOne(filterQuery, (err, card) => {
             if (err) reject(err);
-            resolve({
-                quantity: matches[2] ? parseInt(matches[2], 10) : 1,
-                card: card._id
-            });
+            if (!card) {
+                reject(`Card not found: ${filterQuery.name}${filterQuery.set ? ` ${filterQuery.set}` : ''}${filterQuery.collector_number ? ` ${filterQuery.collector_number}` : ''}`);
+            } else {
+                resolve({
+                    quantity: matches[2] ? parseInt(matches[2], 10) : 1,
+                    card: card._id
+                });
+            }
         });
-
     });
 }
