@@ -3,11 +3,16 @@ const router = express.Router();
 const decksCtrl = require('../controllers/decks');
 
 router.get('/', decksCtrl.index);
-router.get('/new', decksCtrl.new);
+router.get('/new', isLoggedIn, decksCtrl.new);
 router.get('/:id', decksCtrl.show);
-router.get('/:id/edit', decksCtrl.edit);
-router.post('/', decksCtrl.create);
-router.put('/:id', decksCtrl.update);
-router.delete('/:id', decksCtrl.delete);
+router.get('/:id/edit', isLoggedIn, decksCtrl.edit);
+router.post('/', isLoggedIn, decksCtrl.create);
+router.put('/:id', isLoggedIn, decksCtrl.update);
+router.delete('/:id', isLoggedIn, decksCtrl.delete);
+
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) return next();
+    res.redirect('/auth/google');
+}
 
 module.exports = router;
