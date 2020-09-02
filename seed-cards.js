@@ -2,7 +2,8 @@ require('dotenv').config();
 require('./config/database');
 const request = require('request-promise-native');
 const Card = require('./models/card');
-const SCRYFALL_REQUEST_URI = 'https://api.scryfall.com/cards/search?format=json&include_extras=false&include_multilingual=false&order=name&q=is%3Aarenaid&unique=prints'
+const SCRYFALL_REQUEST_URI = 'https://api.scryfall.com/cards/search?format=json&include_extras=false&include_multilingual=false&order=name&unique=prints&q=is%3Aarenaid';
+const SCRYFALL_ART_LOOKUP_URI = 'https://api.scryfall.com/cards/search?format=json&include_extras=false&include_multilingual=false&order=released&unique=prints&dir=desc&q=(set_type%3Acore+or+set_type%3Aexpansion+or+set_type%3Adraft_innovation)+illustration_id%3A'; // match rarity too
 let pageCount = 0;
 
 function parseScryfall(uri) {
@@ -13,6 +14,19 @@ function parseScryfall(uri) {
                 // rename id to scryfall_id and delete id, so that the virtual getter is not interfered with
                 card.scryfall_id = card.id;
                 delete card.id;
+
+                // TODO: Apply set and cn fixes
+                // s/ajmp/jmp/ - cn is fine
+                // s/p?dom/dar/ - cn is fine
+
+                // Historic Anthologies
+                if (card.set.match(/^ha\d$/i)) {
+                    request(`${SCRYFALL_ART_LOOKUP_URI}${card.illustration_id}`)
+                    .then(artResults => {
+
+                    })
+                }
+
                 // findOneAndUpdate w/ upsert: true finds a card doc if it exists, and creates one if it doesn't, massively simplifying the logic here.
                 Card.findOneAndUpdate({ scryfall_id: `${card.scryfall_id}` }, card, { upsert: true }, (err, doc) => {
                     if (err) console.log(err);
