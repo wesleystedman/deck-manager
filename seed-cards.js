@@ -1,9 +1,10 @@
 require('dotenv').config();
 require('./config/database');
+const fs = require('fs');
 const request = require('request-promise-native');
 const Card = require('./models/card');
+const MTGA_CARD_DATA;
 const SCRYFALL_REQUEST_URI = 'https://api.scryfall.com/cards/search?format=json&include_extras=false&include_multilingual=false&order=name&unique=prints&q=is%3Aarenaid';
-const SCRYFALL_ART_LOOKUP_URI = 'https://api.scryfall.com/cards/search?format=json&include_extras=false&include_multilingual=false&order=released&unique=prints&dir=desc&q=(set_type%3Acore+or+set_type%3Aexpansion+or+set_type%3Adraft_innovation)+illustration_id%3A'; // match rarity too
 let pageCount = 0;
 
 function parseScryfall(uri) {
@@ -16,16 +17,15 @@ function parseScryfall(uri) {
                 delete card.id;
 
                 // TODO: Apply set and cn fixes
+                // skip ogw and pdom, they shouldn't be in here
+                if (card.set.match(/^(ogw|pdom)$/)) {}
+                
                 // s/ajmp/jmp/ - cn is fine
-                // s/p?dom/dar/ - cn is fine
+                card.set = card.set.replace(/^ajmp$/, 'jmp');
+                // s/dom/dar/ - cn is fine
+                card.set = card.set.replace(/^dom$/, 'dar');
 
-                // Historic Anthologies
-                if (card.set.match(/^ha\d$/i)) {
-                    request(`${SCRYFALL_ART_LOOKUP_URI}${card.illustration_id}`)
-                    .then(artResults => {
-
-                    })
-                }
+                // /ha\d|pana/
 
                 // findOneAndUpdate w/ upsert: true finds a card doc if it exists, and creates one if it doesn't, massively simplifying the logic here.
                 Card.findOneAndUpdate({ scryfall_id: `${card.scryfall_id}` }, card, { upsert: true }, (err, doc) => {
@@ -44,4 +44,8 @@ function parseScryfall(uri) {
         });
 }
 
-parseScryfall(SCRYFALL_REQUEST_URI);
+fs.readFile('./mtga_card_data.json', 'UTF-8', (err, data) => {
+    if (err) return console.log(err);
+    MTGA_CARD_DATA = JSON.parse(data);
+    parseScryfall(SCRYFALL_REQUEST_URI);
+});
