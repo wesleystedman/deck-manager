@@ -16,7 +16,6 @@ function parseScryfall(uri) {
                 card.scryfall_id = card.id;
                 delete card.id;
 
-                // TODO: Apply set and cn fixes
                 // skip ogw and pdom, they shouldn't be in here
                 if (card.set.match(/^(ogw|pdom)$/)) {
                     console.log(card.set);
