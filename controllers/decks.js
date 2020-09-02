@@ -64,13 +64,19 @@ function create(req, res) {
         .then(() => {
             console.log('Validation successful!', deck);
             // add new deck to DB
-            Deck.create(deck, err => {
-                if (err) {
+            const newDeck = new Deck(deck);
+            newDeck.save()
+                .then(() => {
+                    req.user.decks.push(newDeck._id);
+                    return req.user.save();
+                })
+                .then(() => {
+                    res.redirect('/decks');
+                })
+                .catch(err => {
                     console.log(err);
-                    return res.redirect('/decks/new');
-                }
-                res.redirect('/decks');
-            });
+                    res.redirect('/decks/new');
+                });
         })
         .catch(err => {
             console.log('Validation failed!', err);
