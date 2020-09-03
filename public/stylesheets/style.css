@@ -13,10 +13,11 @@ a {
 
 .deck-tile {
   background-color: grey;
-  height: 100px;
+  height: 8em;
+  width: 13em;
   background-repeat: no-repeat;
   background-position: center center;
-  background-size: contain;
+  background-size: cover;
   text-indent: 100%;
   white-space: nowrap;
   overflow: hidden;
