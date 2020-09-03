@@ -1,5 +1,29 @@
 <%- include('../partials/header') %>
 
+<!-- search box -->
 
+<!-- List of decks -->
+<% if (decks) { %>
+<ul>
+    <% decks.forEach(deck => { %>
+    <li>
+        <div class="deck-tile-container">
+            <div class="deck-tile"></div>
+            <div class="deck-tile-credits"></div>
+        </div>
+        <div class="deck-name-container">
+            <div class="deck-name"></div>
+            <div class="deck-format"></div>
+        </div>
+        <div class="deck-wubrg"></div>
+        <div class="deck-buttons-container"></div>
+    </li>
+    <% }); %>
+</ul>
+<% } else { %>
+<div>
+    No decks found!
+</div>
+<% } %>
 
 <%- include('../partials/footer') %>
