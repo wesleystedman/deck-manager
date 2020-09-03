@@ -6,3 +6,19 @@ body {
 a {
   color: #00B7FF;
 }
+
+.deck-list {
+  list-style: none;
+}
+
+.deck-tile {
+  background-color: grey;
+  height: 100px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+}

@@ -4,20 +4,43 @@
 
 <!-- List of decks -->
 <% if (decks) { %>
-<ul>
+<ul class="deck-list">
     <% decks.forEach(deck => { %>
-    <li>
+    <li class="deck-list-item">
         <div class="deck-tile-container">
-            <div class="deck-tile"></div>
-            <div class="deck-tile-credits"></div>
+            <div class="deck-tile"
+                style="<%= deck.deckTile ? `background-image: url(${deck.deckTile.image_uris.art_crop})` : '' %>">
+                <%= deck.deckTile ? deck.deckTile.name : 'No deck tile' %>
+            </div>
+            <% if (deck.deckTile) { %>
+            <div class="deck-tile-credits">
+                Artist: <%= deck.deckTile.artist %><br>
+                &copy; <%= deck.deckTile.released_at.getFullYear() %> Wizards of the Coast
+            </div>
+            <% } %>
         </div>
         <div class="deck-name-container">
-            <div class="deck-name"></div>
-            <div class="deck-format"></div>
+            <div class="deck-name"><%= deck.name %></div>
+            <div class="deck-format">
+                <%= deck.format ? deck.format.replace(/^./, match => match.toUpperCase()) : '' %>
+            </div>
         </div>
-        <div class="deck-wubrg"></div>
-        <div class="deck-buttons-container"></div>
-    </li>
+        <div class="deck-wubrg">{W}{U}{B}{R}{G}</div>
+        <div class="deck-buttons-container">
+            <button disabled>Export</button>
+            <!-- TODO: add export functionality -->
+            <form action="/decks" method="post">
+                <input type="hidden" name="deckToClone" value="<%= deck.id %>">
+                <button type="submit" disabled>Clone</button>
+            </form>
+            <% if (user && deck.owner.id === user.id) { %>
+            <a href="/decks/<%= deck.id %>/edit">Edit</a>
+            <form action="/decks/<%= deck.id %>?_delete" method="get">
+                <button type="submit">Delete</button>
+            </form>
+            <% } %>
+        </div>
+    </li><br>
     <% }); %>
 </ul>
 <% } else { %>
