@@ -13,13 +13,13 @@ module.exports = {
 }
 
 function index(req, res) {
-    // TODO: implement
-    res.redirect('/');
+    
+    res.render('decks/index');
 }
 
 function show(req, res) {
     // TODO: implement
-    res.redirect('/');
+    res.render('decks/show');
 }
 
 function newDeck(req, res) {
@@ -93,7 +93,7 @@ function create(req, res) {
 
 function edit(req, res) {
     // TODO: implement
-    res.redirect('/');
+    res.render('decks/edit');
 }
 
 function update(req, res) {
