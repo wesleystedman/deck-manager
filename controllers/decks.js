@@ -20,8 +20,7 @@ function index(req, res) {
     }
     Deck.find(queryFilter).populate('owner').populate('deckTile').exec()
         .then(decks => {
-
-            console.log(decks);
+            // console.log(decks);
             res.render('decks/index', { decks });
         })
         .catch(err => {
