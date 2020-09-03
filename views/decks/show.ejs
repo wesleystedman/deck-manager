@@ -1,5 +1,42 @@
 <%- include('../partials/header') %>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="deck-metainfo">
+    <div class="deck-tile-container">
+        <div class="deck-tile"
+            style="<%= deck.deckTile ? `background-image: url(${deck.deckTile.image_uris.art_crop})` : '' %>">
+            <%= deck.deckTile ? deck.deckTile.name : 'No deck tile' %>
+        </div>
+        <% if (deck.deckTile) { %>
+        <div class="deck-tile-credits">
+            Artist: <%= deck.deckTile.artist %><br>
+            &copy; <%= deck.deckTile.released_at.getFullYear() %> Wizards of the Coast
+        </div>
+        <% } %>
+    </div>
+    <div class="deck-name-container">
+        <div class="deck-name"><%= deck.name %></div>
+        <div class="deck-format">
+            Format: <%= deck.format ? deck.format.replace(/^./, match => match.toUpperCase()) : '' %>
+        </div>
+    </div>
+    <div class="deck-wubrg">{W}{U}{B}{R}{G}</div>
+</div>
+<div class="deck-maindeck">
 
+</div>
+<div class="deck-sideboard">
 
+</div>
+<div class="deck-maybeboard">
 
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
 <%- include('../partials/footer') %>

@@ -30,8 +30,24 @@ function index(req, res) {
 }
 
 function show(req, res) {
-    // TODO: implement
-    res.render('decks/show');
+    Deck.findById(req.params.id).populate('owner').populate('deckTile').populate('companion')
+        .then(deck => {
+            for (const prop of ['commandZone', 'mainDeck', 'sideboard', 'maybeboard']) {
+                if (deck[prop]) deck.populate(`${prop}.card`);
+            }
+            deck.execPopulate()
+            .then(() => {
+                // console.log(deck);
+                res.render('decks/show', { deck });
+            })
+            
+
+
+        })
+        .catch(err => {
+            console.log(err);
+            res.redirect('/');
+        })
 }
 
 function newDeck(req, res) {
@@ -131,7 +147,7 @@ function validateCardLine(line) {
     // Aftermath cards export with ///, but can import with //
     // Slashes must, of course, be escaped
     // Scryfall stores adventure and transform card names with //, but arena only exports the first part, and can import with both parts
-    filterQuery.name = new RegExp(`^${matches[3].replace('///', '//').replace('/','\\/')}($| // )`, 'i');
+    filterQuery.name = new RegExp(`^${matches[3].replace('///', '//').replace('/', '\\/')}($| // )`, 'i');
     // console.log(filterQuery.name);
     if (matches[5]) filterQuery.set = new RegExp(matches[5], 'i');
     if (matches[7]) filterQuery.collector_number = matches[7];
