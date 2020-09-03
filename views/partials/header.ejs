@@ -12,11 +12,11 @@
 <body>
     <nav>
         <a href="/">Home</a>
-        <a href="/decks">My Decks</a>
+        <a href="/decks?userId=<%= user.id %>">My Decks</a>
         <a href="/decks/new">Add Deck</a>
-        <a href="/">Public Decks</a>
+        <a href="/decks">Public Decks</a>
         <% if (user) { %>
-        <span>Logged in as Username</span>
+        <span>Logged in as <%= user.name %> </span>
         <a href="/logout">Log Out</a>
         <% } else { %>
         <a href="/auth/google">Log In with Google</a>
