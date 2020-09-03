@@ -13,8 +13,13 @@ module.exports = {
 }
 
 function index(req, res) {
-    
-    res.render('decks/index');
+    const queryFilter = {};
+    // search query handling goes here
+    if (req.query.userid) {
+        queryFilter.owner = req.query.userid;
+    }
+    // Deck.find(queryFilter)
+    res.render('decks/index', { decks: null });
 }
 
 function show(req, res) {
@@ -76,7 +81,7 @@ function create(req, res) {
                 //     return req.user.save();
                 // })
                 .then(() => {
-                    res.redirect(`/decks?userId=${req.user.id}`);
+                    res.redirect(`/decks?userid=${req.user.id}`);
                 })
                 .catch(err => {
                     console.log(err);
