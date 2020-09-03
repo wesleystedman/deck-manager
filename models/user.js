@@ -5,7 +5,7 @@ const userSchema = new Schema({
     name: String,
     email: String,
     googleId: String,
-    decks: [{type: Schema.Types.ObjectId, ref: 'Deck'}]
+    // decks: [{type: Schema.Types.ObjectId, ref: 'Deck'}]
 });
 
 module.exports = mongoose.model('User', userSchema);

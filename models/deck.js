@@ -7,6 +7,7 @@ const cardQuantitySchema = new Schema({
 });
 
 const deckSchema = new Schema({
+    owner: {type: Schema.Types.ObjectId, ref: 'User'},
     name: String,
     mtgaId: String,
     format: String,

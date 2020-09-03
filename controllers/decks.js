@@ -68,14 +68,15 @@ function create(req, res) {
         .then(() => {
             console.log('Validation successful!', deck);
             // add new deck to DB
+            deck.owner = req.user._id;
             const newDeck = new Deck(deck);
             newDeck.save()
+                // .then(() => {
+                //     req.user.decks.push(newDeck._id);
+                //     return req.user.save();
+                // })
                 .then(() => {
-                    req.user.decks.push(newDeck._id);
-                    return req.user.save();
-                })
-                .then(() => {
-                    res.redirect('/decks');
+                    res.redirect(`/decks?userId=${req.user.id}`);
                 })
                 .catch(err => {
                     console.log(err);
