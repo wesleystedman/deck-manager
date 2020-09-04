@@ -1,6 +1,6 @@
 <%- include('../partials/header') %>
 
-<form action="/decks" method="post">
+<form action="/decks/<%= _id %>?_method=PUT" method="POST">
     <label>Deck Name:
         <input type="text" name="name" autocomplete="off" required value="<%= name %>">
     </label><br>
@@ -25,7 +25,7 @@
     <label>Maybeboard:
         <textarea name="maybeboard" autocomplete="off"><%= maybeboard %></textarea>
     </label><br>
-    <button type="submit">Add Deck</button>
+    <button type="submit">Update Deck</button>
 </form>
 
 <%- include('../partials/footer') %>

@@ -122,7 +122,7 @@ function newDeck(req, res) {
 // TODO: add deck cloning handling
 function create(req, res) {
     for (let key in req.body) {
-        if (req.body[key] === '') delete req.body[key];
+        if (req.body[key].match(/^\s*$/)) delete req.body[key];
     }
     console.log(req.body);
     // process input - convert card names to cards, etc.
@@ -197,6 +197,7 @@ function edit(req, res) {
                     deck.execPopulate()
                         .then(deck => {
                             const formValues = {};
+                            formValues._id = deck._id;
                             formValues.name = deck.name;
                             formValues.format = deck.format;
                             formValues.deckTile = deck.deckTile ? `${deck.deckTile.name} (${deck.deckTile.set.toUpperCase()}) ${deck.deckTile.collector_number}` : '';
@@ -227,9 +228,73 @@ function edit(req, res) {
         })
 }
 
+// This is heavily based on create
 function update(req, res) {
-    // TODO: implement
-    res.redirect('/');
+    Deck.findById(req.params.id)
+        .then(deckToUpdate => {
+            if (!deckToUpdate.owner.equals(req.user._id)) return res.redirect(`/decks/${req.params.id}`);
+            for (let key in req.body) {
+                if (req.body[key].match(/^\s*$/)) delete req.body[key];
+            }
+            // console.log(req.body);
+            const deck = {};
+            const promises = [];
+            deck.name = req.body.name;
+            deck.format = req.body.format ? req.body.format.toLowerCase() : undefined;
+            if (req.body.deckTile) {
+                const p = validateCardLine(req.body.deckTile);
+                promises.push(p);
+                p.then(cQPair => { deck.deckTile = cQPair.card })
+                    .catch(err => { console.log(err, 'deckTile') });
+            } else {
+                deck.deckTile = undefined;
+            }
+            if (req.body.companion) {
+                const p = validateCardLine(req.body.companion);
+                promises.push(p);
+                p.then(cQPair => { deck.companion = cQPair.card })
+                    .catch(err => { console.log(err, 'companion') });
+            } else {
+                deck.companion = undefined;
+            }
+            for (const prop of ['commandZone', 'mainDeck', 'sideboard', 'maybeboard']) {
+                if (req.body[prop]) {
+                    deck[prop] = [];
+                    const lines = req.body[prop].split('\r\n');
+                    lines.forEach(line => {
+                        if (line !== '') {
+                            const p = validateCardLine(line);
+                            promises.push(p);
+                            p.then(cQPair => { deck[prop].push(cQPair) })
+                                .catch(err => { console.log(err, prop) });
+                        }
+                    });
+                } else {
+                    deck[prop] = [];
+                }
+            }
+            Promise.all(promises)
+                .then(() => {
+                    console.log('Validation successful!', deck);
+                    deck.owner = req.user._id;
+                    Deck.findByIdAndUpdate(req.params.id, deck, {omitUndefined: true})
+                        .then(() => {
+                            res.redirect(`/decks?userid=${req.user.id}`);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            res.redirect('/decks/new');
+                        });
+                })
+                .catch(err => {
+                    console.log('Validation failed!', err);
+                    res.redirect('/decks/new');
+                });
+        })
+        .catch(err => {
+            console.log(err);
+            res.redirect(`/decks/${req.params.id}`);
+        })
 }
 
 function deleteDeck(req, res) {
