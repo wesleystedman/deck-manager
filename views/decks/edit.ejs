@@ -11,19 +11,19 @@
         <input type="text" name="deckTile" autocomplete="off" value="<%= deckTile %>">
     </label><br>
     <label>Companion:
-        <input type="text" name="companion" autocomplete="off">
+        <input type="text" name="companion" autocomplete="off" value="<%= companion %>">
     </label><br>
     <label>Commander(s):
-        <textarea name="commandZone" autocomplete="off"></textarea>
+        <textarea name="commandZone" autocomplete="off"><%= commandZone %></textarea>
     </label><br>
     <label>Main Deck:
-        <textarea name="mainDeck" autocomplete="off"></textarea>
+        <textarea name="mainDeck" autocomplete="off"><%= mainDeck %></textarea>
     </label><br>
     <label>Sideboard:
-        <textarea name="sideboard" autocomplete="off"></textarea>
+        <textarea name="sideboard" autocomplete="off"><%= sideboard %></textarea>
     </label><br>
     <label>Maybeboard:
-        <textarea name="maybeboard" autocomplete="off"></textarea>
+        <textarea name="maybeboard" autocomplete="off"><%= maybeboard %></textarea>
     </label><br>
     <button type="submit">Add Deck</button>
 </form>

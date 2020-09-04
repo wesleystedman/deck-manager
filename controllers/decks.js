@@ -200,6 +200,13 @@ function edit(req, res) {
                             formValues.name = deck.name;
                             formValues.format = deck.format;
                             formValues.deckTile = deck.deckTile ? `${deck.deckTile.name} (${deck.deckTile.set.toUpperCase()}) ${deck.deckTile.collector_number}` : '';
+                            formValues.companion = deck.companion ? `${deck.companion.name} (${deck.companion.set.toUpperCase()}) ${deck.companion.collector_number}` : '';
+
+                            for (const prop of ['commandZone', 'mainDeck', 'sideboard', 'maybeboard']) {
+                                formValues[prop] = deck[prop].reduce((accStr, cQPair) => {
+                                    return accStr + `${cQPair.quantity} ${cQPair.card.name} (${cQPair.card.set.toUpperCase()}) ${cQPair.card.collector_number}\r\n`;
+                                }, '');
+                            }
 
                             res.render('decks/edit', formValues);
                         })
