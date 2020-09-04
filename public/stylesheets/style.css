@@ -23,3 +23,16 @@ a {
   overflow: hidden;
   display: inline-block;
 }
+
+.deck-list-item {
+  border: gray 2px solid;
+  border-radius: 10px;
+}
+
+.footer-legal {
+  text-align: justify;
+}
+
+.footer-github {
+  text-align: center;
+}

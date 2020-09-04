@@ -11,17 +11,33 @@
 </head>
 
 <body>
-    <nav>
-        <a href="/">Home</a>
-        <% if (user) { %>
-            <a href="/decks?userid=<%= user.id %>">My Decks</a>
-            <a href="/decks/new">Add Deck</a>
-        <% } %>
-        <a href="/decks">Public Decks</a>
-        <% if (user) { %>
-        <span>Logged in as <%= user.name %> </span>
-        <a href="/logout">Log Out</a>
-        <% } else { %>
-        <a href="/auth/google">Log In with Google</a>
-        <% } %>
+    <nav class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <a class="col" href="/">Home</a>
+                    <% if (user) { %>
+                    <a class="col" href="/decks?userid=<%= user.id %>">My Decks</a>
+                    <a class="col" href="/decks/new">Add Deck</a>
+                    <% } %>
+                    <a class="col" href="/decks">Public Decks</a>
+                </div>
+
+            </div>
+            <div class="col">
+                <div class="row">
+                    <% if (user) { %>
+                    <span class="col">Logged in as <%= user.name %> </span>
+                    <a class="col" href="/logout">Log Out</a>
+                    <% } else { %>
+                    <a class="col" href="/auth/google">Log In with Google</a>
+                    <% } %>
+                </div>
+            </div>
+
+
+        </div>
     </nav>
+    <br>
+    <br>
+    <br>

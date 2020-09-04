@@ -1,13 +1,13 @@
 <%- include('../partials/header') %>
-<br><br><br>
+
 <!-- search box -->
 
 <!-- List of decks -->
 <% if (decks) { %>
-<ul class="deck-list">
+<ul class="deck-list container-md">
     <% decks.forEach(deck => { %>
-    <li class="deck-list-item">
-        <div class="deck-tile-container">
+    <li class="deck-list-item row row-cols-4 align-items-center justify-content-center">
+        <div class="deck-tile-container col">
             <div class="deck-tile"
                 style="<%= deck.deckTile ? `background-image: url(${deck.deckTile.image_uris.art_crop})` : '' %>">
                 <%= deck.deckTile ? deck.deckTile.name : 'No deck tile' %>
@@ -19,14 +19,14 @@
             </div>
             <% } %>
         </div>
-        <div class="deck-name-container">
+        <div class="deck-name-container col">
             <div class="deck-name"><a href="/decks/<%= deck.id %>"><%= deck.name %></a></div>
             <div class="deck-format">
                 Format: <%= deck.format ? deck.format.replace(/^./, match => match.toUpperCase()) : '' %>
             </div>
         </div>
-        <div class="deck-wubrg">{W}{U}{B}{R}{G}</div>
-        <div class="deck-buttons-container">
+        <div class="deck-wubrg col">{W}{U}{B}{R}{G}</div>
+        <div class="deck-buttons-container col">
             <button disabled>Export</button>
             <!-- TODO: add export functionality -->
             <form action="/decks" method="post">
@@ -52,5 +52,5 @@
 
 
 
-<br><br><br>
+
 <%- include('../partials/footer') %>
