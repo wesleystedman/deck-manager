@@ -19,10 +19,11 @@
         <% } %>
     </div>
     <div class="deck-name-container">
-        <div class="deck-name"><%= deck.name %></div>
-        <div class="deck-format">
+        <h1 class="deck-name"><%= deck.name %></h1>
+        <h5 class="deck-format">
             Format: <%= deck.format ? deck.format.replace(/^./, match => match.toUpperCase()) : '' %>
-        </div>
+        </h5>
+        <h5 class="deck-submitter">Submitted by: <a href="/decks?userid=<%= deck.owner.id %>" target="_blank"><%= deck.owner.name %></a></h5>
     </div>
     <div class="deck-wubrg">{W}{U}{B}{R}{G}</div>
 </div>
@@ -32,7 +33,7 @@
     <h3 class="deck-section-header"><%= prop.replace('D', ' D').replace(/^./, match => match.toUpperCase()) %></h3>
     <% for (const cardType of ['Creature', 'Planeswalker', 'Instant', 'Sorcery', 'Artifact', 'Enchantment', 'Land']) { %>
         <% if (deckData[prop][cardType] && deckData[prop][cardType].length) { %>
-            <h5 class="card-type-header"><%= cardType %></h5>
+            <h5 class="card-type-header"><%= cardType === 'Sorcery' ? 'Sorceries' : `${cardType}s` %></h5>
             <% deckData[prop][cardType].forEach(card => { %>
                 <div class="card-details-container">
                     <span class="card-quantity"><%= card.quantity %></span>
