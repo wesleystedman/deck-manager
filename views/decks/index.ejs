@@ -20,7 +20,7 @@
             <% } %>
         </div>
         <div class="deck-name-container">
-            <div class="deck-name"><%= deck.name %></div>
+            <div class="deck-name"><a href="/decks/<%= deck.id %>"><%= deck.name %></a></div>
             <div class="deck-format">
                 Format: <%= deck.format ? deck.format.replace(/^./, match => match.toUpperCase()) : '' %>
             </div>
@@ -33,9 +33,10 @@
                 <input type="hidden" name="deckToClone" value="<%= deck.id %>">
                 <button type="submit" disabled>Clone</button>
             </form>
+            
             <% if (user && deck.owner.id === user.id) { %>
             <a href="/decks/<%= deck.id %>/edit">Edit</a>
-            <form action="/decks/<%= deck.id %>?_delete" method="get">
+            <form action="/decks/<%= deck.id %>?_method=DELETE" method="POST">
                 <button type="submit">Delete</button>
             </form>
             <% } %>

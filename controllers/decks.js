@@ -196,8 +196,22 @@ function update(req, res) {
 }
 
 function deleteDeck(req, res) {
-    // TODO: implement
-    res.redirect('/');
+    Deck.findById(req.params.id)
+    .then(deck => {
+        if (!deck.owner.equals(req.user._id)) return res.redirect(`/decks/${req.params.id}`);
+        Deck.findByIdAndDelete(req.params.id)
+        .then(() => {
+            res.redirect(`/decks/?userid=${req.user.id}`);
+        })
+        .catch(err => {
+            res.redirect(`/decks/${req.params.id}`)
+        })
+
+    })
+    .catch(err => {
+        console.log(err);
+        res.redirect(`/decks/${req.params.id}`);
+    })
 }
 
 // accepts a MTGA import/export format string
