@@ -1,44 +1,56 @@
 <%- include('../partials/header') %>
-
-<div class="deck-metainfo">
-    <div class="deck-tile-container">
-        <div class="deck-tile"
-            style="<%= deck.deckTile ? `background-image: url(${deck.deckTile.image_uris.art_crop})` : '' %>">
-            <%= deck.deckTile ? deck.deckTile.name : 'No deck tile' %>
+<div class="container-fluid">
+    <div class="row row-cols-4">
+        <div class="col">
+            <div class="deck-metainfo">
+                <div class="deck-tile-container">
+                    <div class="deck-tile"
+                        style="<%= deck.deckTile ? `background-image: url(${deck.deckTile.image_uris.art_crop})` : '' %>">
+                        <%= deck.deckTile ? deck.deckTile.name : 'No deck tile' %>
+                    </div>
+                    <% if (deck.deckTile) { %>
+                    <div class="deck-tile-credits">
+                        Artist: <%= deck.deckTile.artist %><br>
+                        &copy; <%= deck.deckTile.released_at.getFullYear() %> Wizards of the Coast
+                    </div>
+                    <% } %>
+                </div>
+                <div class="deck-name-container">
+                    <h1 class="deck-name"><%= deck.name %></h1>
+                    <h5 class="deck-format">
+                        Format: <%= deck.format ? deck.format.replace(/^./, match => match.toUpperCase()) : '' %>
+                    </h5>
+                    <h5 class="deck-submitter">Submitted by: <a href="/decks?userid=<%= deck.owner.id %>"
+                            target="_blank"><%= deck.owner.name %></a></h5>
+                </div>
+                <div class="deck-wubrg">{W}{U}{B}{R}{G}</div>
+            </div>
         </div>
-        <% if (deck.deckTile) { %>
-        <div class="deck-tile-credits">
-            Artist: <%= deck.deckTile.artist %><br>
-            &copy; <%= deck.deckTile.released_at.getFullYear() %> Wizards of the Coast
-        </div>
-        <% } %>
-    </div>
-    <div class="deck-name-container">
-        <h1 class="deck-name"><%= deck.name %></h1>
-        <h5 class="deck-format">
-            Format: <%= deck.format ? deck.format.replace(/^./, match => match.toUpperCase()) : '' %>
-        </h5>
-        <h5 class="deck-submitter">Submitted by: <a href="/decks?userid=<%= deck.owner.id %>" target="_blank"><%= deck.owner.name %></a></h5>
-    </div>
-    <div class="deck-wubrg">{W}{U}{B}{R}{G}</div>
-</div>
 
-<% for (const prop of ['mainDeck', 'sideboard', 'maybeboard']) { %>
-<div class="deck-<%= prop.toLowerCase %>">
-    <h3 class="deck-section-header"><%= prop.replace('D', ' D').replace(/^./, match => match.toUpperCase()) %></h3>
-    <% for (const cardType of ['Creature', 'Planeswalker', 'Instant', 'Sorcery', 'Artifact', 'Enchantment', 'Land']) { %>
-        <% if (deckData[prop][cardType] && deckData[prop][cardType].length) { %>
-            <h5 class="card-type-header"><%= cardType === 'Sorcery' ? 'Sorceries' : `${cardType}s` %></h5>
-            <% deckData[prop][cardType].forEach(card => { %>
+        <% for (const prop of ['mainDeck', 'sideboard', 'maybeboard']) { %>
+        <div class="col">
+            <div class="deck-<%= prop.toLowerCase %>">
+                <h3 class="deck-section-header">
+                    <%= prop.replace('D', ' D').replace(/^./, match => match.toUpperCase()) %></h3>
+                <% for (const cardType of ['Creature', 'Planeswalker', 'Instant', 'Sorcery', 'Artifact', 'Enchantment', 'Land']) { %>
+                <% if (deckData[prop][cardType] && deckData[prop][cardType].length) { %>
+                <h5 class="card-type-header"><%= cardType === 'Sorcery' ? 'Sorceries' : `${cardType}s` %></h5>
+                <% deckData[prop][cardType].forEach(card => { %>
                 <div class="card-details-container">
                     <span class="card-quantity"><%= card.quantity %></span>
                     <span class="card-name"><%= card.name %></span>
                     <span class="card-manacost"><%= card.mana_cost %></span>
                 </div>
-            <% }) %>
+                <% }) %>
+                <% } %>
+                <% } %>
+            </div>
+        </div>
         <% } %>
-    <% } %>
+    </div>
 </div>
-<% } %>
+
+
+
 
 <%- include('../partials/footer') %>
