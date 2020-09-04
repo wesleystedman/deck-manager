@@ -82,7 +82,7 @@ function show(req, res) {
                             const cardData = {
                                 quantity: cQPair.quantity,
                                 name: cQPair.card.name,
-                                set: cQPair.card.set,
+                                // set: cQPair.card.set,
                                 mana_cost: cQPair.card.mana_cost,
                                 cmc: cQPair.card.cmc
                             };
@@ -100,9 +100,7 @@ function show(req, res) {
                         deck,
                         companionData: Object.keys(companionData).length ? companionData : null, // card detail object
                         commanderData: commanderData.length ? commanderData : null, // array of card detail objects
-                        mainDeck: deckData.mainDeck, // dict of card type -> array of sorted card detail objects
-                        sideboard: deckData.sideboard,
-                        maybeboard: deckData.maybeboard
+                        deckData // object of dict of card type -> array of sorted card detail objects
                     });
                 })
                 .catch(err => {

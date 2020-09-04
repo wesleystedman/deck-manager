@@ -27,18 +27,23 @@
     <div class="deck-wubrg">{W}{U}{B}{R}{G}</div>
 </div>
 
-<div class="deck-maindeck">
-    <h3>Main Deck</h3>
+<% for (const prop of ['mainDeck', 'sideboard', 'maybeboard']) { %>
+<div class="deck-<%= prop.toLowerCase %>">
+    <h3 class="deck-section-header"><%= prop.replace('D', ' D').replace(/^./, match => match.toUpperCase()) %></h3>
+    <% for (const cardType of ['Creature', 'Planeswalker', 'Instant', 'Sorcery', 'Artifact', 'Enchantment', 'Land']) { %>
+        <% if (deckData[prop][cardType] && deckData[prop][cardType].length) { %>
+            <h5 class="card-type-header"><%= cardType %></h5>
+            <% deckData[prop][cardType].forEach(card => { %>
+                <div class="card-details-container">
+                    <span class="card-quantity"><%= card.quantity %></span>
+                    <span class="card-name"><%= card.name %></span>
+                    <span class="card-manacost"><%= card.mana_cost %></span>
+                </div>
+            <% }) %>
+        <% } %>
+    <% } %>
 </div>
-
-<div class="deck-sideboard">
-    <h3>Sideboard</h3>
-</div>
-
-<div class="deck-maybeboard">
-    <h3>Maybeboard</h3>
-</div>
-
+<% } %>
 <br>
 <br>
 <br>
