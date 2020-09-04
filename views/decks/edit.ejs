@@ -1,6 +1,6 @@
 <%- include('../partials/header') %>
 
-<form action="/decks/<%= _id %>?_method=PUT" method="POST">
+<form class="deck-form" action="/decks/<%= _id %>?_method=PUT" method="POST">
     <label>Deck Name:
         <input type="text" name="name" autocomplete="off" required value="<%= name %>">
     </label><br>

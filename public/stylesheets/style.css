@@ -53,3 +53,7 @@ nav {
 .deck-format {
   font-size: 1.4rem;
 }
+
+.deck-form input, .deck-form textarea {
+  width: 300px;
+}
