@@ -5,6 +5,8 @@ This is a deck manager tool meant to work with Magic: The Gathering Arena.  It p
 ## Getting Started
 
 [Wesley's Deck Manager on Heroku](https://deck-manager.herokuapp.com)
+
+
 [Project Trello Board](https://trello.com/b/JOFhM4nA/deck-manager)
 
 First, click the link in the top right corner of the screen to log in with Google.  Then, click on the "Add Deck" link in the nav bar.  Once you've added a deck, you can click "My Decks" to see all of the decks you've added.  You can also click "Public Decks" to see the most recently modified decks from all users.
