@@ -1,6 +1,13 @@
 const Deck = require('../models/deck');
 const Card = require('../models/card');
-const DECK_LINE_REGEX = /^\s*((\d+)\s+)?([A-Za-z '’,/-]+?)(\s+\(([A-Za-z0-9]+)\)(\s+(\d+))?)?\s*$/;
+const card = require('../models/card');
+// Matches an extension of MTGA import/export format - quantity is always optional, and set code may be used w/o collector number.
+// $2 = quantity, $3 = card name, $5 = set code, $7 = collector number
+const DECK_LINE_REGEX = /^\s*((\d+)\s+)?([A-Za-z '’,/-]+?)(\s+\(([A-Za-z0-9]+)\)(\s+([\dA-Za-z]+))?)?\s*$/;
+// Matches the type_line parameter of a Scryfall card object.  This will match every black-bordered type as of M21.
+// $1 = first half full type line, $2 = supertype and type, $3 = subtype, 
+// $6 = second half full type line, $7 = supertype and type, $8 = subtype
+const TYPE_LINE_REGEX = /^(([A-Za-z -]+)( — ([A-Za-z '-]+))?)( \/\/ (([A-Za-z -]+)( — ([A-Za-z '-]+))?))?$/;
 
 module.exports = {
     index,
@@ -36,13 +43,72 @@ function show(req, res) {
                 if (deck[prop]) deck.populate(`${prop}.card`);
             }
             deck.execPopulate()
-            .then(() => {
-                // console.log(deck);
-                res.render('decks/show', { deck });
-            })
-            
+                .then(deck => {
+                    // console.log(deck);
+                    const companionData = {};
+                    if (deck.companion) {
+                        companionData.name = deck.companion.name;
+                        companionData.set = deck.companion.set;
+                        companionData.mana_cost = deck.companion.mana_cost;
+                    }
 
+                    const commanderData = [];
+                    deck.commandZone.forEach(cQPair => {
+                        // assuming only one copy, since that's currently 100% of practical cases
+                        commanderData.push({
+                            name: cQPair.card.name,
+                            set: cQPair.card.set,
+                            mana_cost: cQPair.card.mana_cost
+                        });
+                    });
 
+                    const deckData = {
+                        mainDeck: {},
+                        sideboard: {},
+                        maybeboard: {}
+                    };
+                    for (const prop of ['mainDeck', 'sideboard', 'maybeboard']) {
+                        deck[prop].forEach(cQPair => {
+                            const types = cQPair.card.type_line.match(TYPE_LINE_REGEX);
+                            const regularTypes = types[2].replace(/(Basic|Legendary|Snow|World|Tribal) /g, '');
+                            // group multi-type cards based on their primary type
+                            const primaryType = regularTypes.includes('Creature')
+                                ? 'Creature'
+                                : regularTypes.includes('Land')
+                                    ? 'Land'
+                                    : regularTypes.includes('Enchantment')
+                                        ? 'Enchantment'
+                                        : regularTypes.split(' ')[0];
+                            const cardData = {
+                                quantity: cQPair.quantity,
+                                name: cQPair.card.name,
+                                set: cQPair.card.set,
+                                mana_cost: cQPair.card.mana_cost,
+                                cmc: cQPair.card.cmc
+                            };
+                            if (!deckData[prop][primaryType]) deckData[prop][primaryType] = [];
+                            deckData[prop][primaryType].push(cardData);
+                        });
+                        for (const type of Object.keys(deckData[prop])) {
+                            deckData[prop][type]
+                                .sort((a, b) => a.name.localeCompare(b.name, 'en-US'))
+                                .sort((a, b) => a.cmc - b.cmc);
+                        }
+                    }
+
+                    res.render('decks/show', {
+                        deck,
+                        companionData: Object.keys(companionData).length ? companionData : null, // card detail object
+                        commanderData: commanderData.length ? commanderData : null, // array of card detail objects
+                        mainDeck: deckData.mainDeck, // dict of card type -> array of sorted card detail objects
+                        sideboard: deckData.sideboard,
+                        maybeboard: deckData.maybeboard
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                    res.redirect('/');
+                })
         })
         .catch(err => {
             console.log(err);
