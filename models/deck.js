@@ -18,6 +18,8 @@ const deckSchema = new Schema({
     sideboard: [cardQuantitySchema],
     maybeboard: [cardQuantitySchema],
     lastUpdated: Date
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model('Deck', deckSchema);
