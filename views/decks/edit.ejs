@@ -1,5 +1,31 @@
 <%- include('../partials/header') %>
 
-
+<form action="/decks" method="post">
+    <label>Deck Name:
+        <input type="text" name="name" autocomplete="off" required value="<%= name %>">
+    </label><br>
+    <label>Format:
+        <input type="text" name="format" autocomplete="off" value="<%= format %>">
+    </label><br>
+    <label>Deckbox Card Image:
+        <input type="text" name="deckTile" autocomplete="off" value="<%= deckTile %>">
+    </label><br>
+    <label>Companion:
+        <input type="text" name="companion" autocomplete="off">
+    </label><br>
+    <label>Commander(s):
+        <textarea name="commandZone" autocomplete="off"></textarea>
+    </label><br>
+    <label>Main Deck:
+        <textarea name="mainDeck" autocomplete="off"></textarea>
+    </label><br>
+    <label>Sideboard:
+        <textarea name="sideboard" autocomplete="off"></textarea>
+    </label><br>
+    <label>Maybeboard:
+        <textarea name="maybeboard" autocomplete="off"></textarea>
+    </label><br>
+    <button type="submit">Add Deck</button>
+</form>
 
 <%- include('../partials/footer') %>
