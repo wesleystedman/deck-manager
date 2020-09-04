@@ -36,3 +36,7 @@ a {
 .footer-github {
   text-align: center;
 }
+
+nav {
+  font-size: 1.25rem;
+}

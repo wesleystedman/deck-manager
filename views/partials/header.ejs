@@ -13,7 +13,7 @@
 <body>
     <nav class="container-fluid">
         <div class="row">
-            <div class="col">
+            <div class="col-5">
                 <div class="row">
                     <a class="col" href="/">Home</a>
                     <% if (user) { %>
@@ -22,9 +22,8 @@
                     <% } %>
                     <a class="col" href="/decks">Public Decks</a>
                 </div>
-
             </div>
-            <div class="col">
+            <div class="col-4 offset-8">
                 <div class="row">
                     <% if (user) { %>
                     <span class="col">Logged in as <%= user.name %> </span>
