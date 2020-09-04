@@ -25,7 +25,7 @@ function index(req, res) {
     if (req.query.userid) {
         queryFilter.owner = req.query.userid;
     }
-    Deck.find(queryFilter).populate('owner').populate('deckTile').exec()
+    Deck.find(queryFilter).sort({ updatedAt: 'desc' }).populate('owner').populate('deckTile').exec()
         .then(decks => {
             // console.log(decks);
             res.render('decks/index', { decks });
