@@ -1,6 +1,5 @@
 const Deck = require('../models/deck');
 const Card = require('../models/card');
-const card = require('../models/card');
 // Matches an extension of MTGA import/export format - quantity is always optional, and set code may be used w/o collector number.
 // $2 = quantity, $3 = card name, $5 = set code, $7 = collector number
 const DECK_LINE_REGEX = /^\s*((\d+)\s+)?([A-Za-z '’,/-]+?)(\s+\(([A-Za-z0-9]+)\)(\s+([\dA-Za-z]+))?)?\s*$/;
