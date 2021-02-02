@@ -128,6 +128,7 @@ function create(req, res) {
     // process input - convert card names to cards, etc.
     const deck = {};
     const promises = [];
+    let colors = [];
     deck.name = req.body.name;
     if (req.body.format) deck.format = req.body.format.toLowerCase();
     if (req.body.deckTile) {
@@ -148,7 +149,7 @@ function create(req, res) {
             const lines = req.body[prop].split('\r\n');
             lines.forEach(line => {
                 if (line !== '') {
-                    const p = validateCardLine(line);
+                    const p = validateCardLine(line, colors);
                     promises.push(p);
                     p.then(cQPair => { deck[prop].push(cQPair) })
                         .catch(err => { console.log(err, prop) });
@@ -161,6 +162,7 @@ function create(req, res) {
         .then(() => {
             console.log('Validation successful!', deck);
             // add new deck to DB
+            deck.colors = [...new Set(colors.flat())];
             deck.owner = req.user._id;
             const newDeck = new Deck(deck);
             newDeck.save()
@@ -239,6 +241,7 @@ function update(req, res) {
             // console.log(req.body);
             const deck = {};
             const promises = [];
+            let colors = [];
             deck.name = req.body.name;
             deck.format = req.body.format ? req.body.format.toLowerCase() : undefined;
             if (req.body.deckTile) {
@@ -263,7 +266,7 @@ function update(req, res) {
                     const lines = req.body[prop].split('\r\n');
                     lines.forEach(line => {
                         if (line !== '') {
-                            const p = validateCardLine(line);
+                            const p = validateCardLine(line, colors);
                             promises.push(p);
                             p.then(cQPair => { deck[prop].push(cQPair) })
                                 .catch(err => { console.log(err, prop) });
@@ -276,6 +279,7 @@ function update(req, res) {
             Promise.all(promises)
                 .then(() => {
                     console.log('Validation successful!', deck);
+                    deck.colors = [...new Set(colors.flat())];
                     deck.owner = req.user._id;
                     Deck.findByIdAndUpdate(req.params.id, deck, {omitUndefined: true})
                         .then(() => {
@@ -319,7 +323,7 @@ function deleteDeck(req, res) {
 // accepts a MTGA import/export format string
 // returns a cardQuantitySchema-compatible object if the specified card exists
 // returns null if format is wrong or card does not exist
-function validateCardLine(line) {
+function validateCardLine(line, colors) {
     const matches = line.match(DECK_LINE_REGEX);
     if (!matches) return new Promise((resolve, reject) => { reject(`Wrong line format: ${line}`) });
     // console.log('matches', matches);
@@ -338,6 +342,7 @@ function validateCardLine(line) {
             if (!card) {
                 reject(`Card not found: ${filterQuery.name}${filterQuery.set ? ` ${filterQuery.set}` : ''}${filterQuery.collector_number ? ` ${filterQuery.collector_number}` : ''}`);
             } else {
+                if (colors) colors.push(card.colors);
                 resolve({
                     quantity: matches[2] ? parseInt(matches[2], 10) : 1,
                     card: card._id
