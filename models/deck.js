@@ -11,6 +11,7 @@ const deckSchema = new Schema({
     name: String,
     mtgaId: String,
     format: String,
+    colors: [String],
     deckTile: {type: Schema.Types.ObjectId, ref: 'Card'},
     companion: {type: Schema.Types.ObjectId, ref: 'Card'},
     commandZone: [cardQuantitySchema],

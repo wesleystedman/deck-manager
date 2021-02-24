@@ -57,3 +57,36 @@ nav {
 .deck-form input, .deck-form textarea {
   width: 300px;
 }
+
+
+/* wubrg symbols */
+.wubrg-w, .wubrg-u, .wubrg-b, .wubrg-r, .wubrg-g {
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+}
+
+.wubrg-w {
+  background-color: yellow;
+  background-image: none;
+}
+.wubrg-u {
+  background-color: blue;
+  background-image: none;
+}
+.wubrg-b {
+  background-color: purple;
+  background-image: none;
+}
+.wubrg-r {
+  background-color: red;
+  background-image: none;
+}
+.wubrg-g {
+  background-color: green;
+  background-image: none;
+}
+.wubrg-inactive {
+  background-color: lightgray;
+  /* add background image transformation */
+}

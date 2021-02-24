@@ -23,7 +23,13 @@
                     <h5 class="deck-submitter">Submitted by: <a href="/decks?userid=<%= deck.owner.id %>"
                             target="_blank"><%= deck.owner.name %></a></h5>
                 </div>
-                <div class="deck-wubrg">{W}{U}{B}{R}{G}</div>
+                <div class="deck-wubrg col">
+                    <span class="wubrg-w <%= deck.colors.includes('W') ? '' : 'wubrg-inactive' %>">{W}</span>
+                    <span class="wubrg-u <%= deck.colors.includes('U') ? '' : 'wubrg-inactive' %>">{U}</span>
+                    <span class="wubrg-b <%= deck.colors.includes('B') ? '' : 'wubrg-inactive' %>">{B}</span>
+                    <span class="wubrg-r <%= deck.colors.includes('R') ? '' : 'wubrg-inactive' %>">{R}</span>
+                    <span class="wubrg-g <%= deck.colors.includes('G') ? '' : 'wubrg-inactive' %>">{G}</span>
+                </div>
                 <div class="deck-buttons-container">
                     <button disabled>Export</button>
                     <form action="/decks" method="post">
