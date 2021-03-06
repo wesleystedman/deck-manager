@@ -69,7 +69,21 @@
         <% } %>
     </div>
 </div>
-
+<br><br>
+<h3>Export</h3>
+<p>
+    <% for (const prop of ['mainDeck', 'sideboard']) { %>
+        
+        <% for (const cardType of ['Creature', 'Planeswalker', 'Instant', 'Sorcery', 'Artifact', 'Enchantment', 'Land']) { %>
+            <% if (deckData[prop][cardType] && deckData[prop][cardType].length) { %>
+                <% deckData[prop][cardType].forEach(card => { %>
+                    <%= card.quantity %> <%= card.name.replace(/^([^/]+)( \/+.+)?$/, '$1') %> (<%= card.set %>) <%= card.cn %><br>
+                <% }) %>
+            <% } %>
+        <% } %>
+        <br><%= prop === 'mainDeck' ? 'Sideboard' : '' %><br>
+    <% } %>
+</p>
 
 
 

@@ -81,9 +81,10 @@ function show(req, res) {
                             const cardData = {
                                 quantity: cQPair.quantity,
                                 name: cQPair.card.name,
-                                // set: cQPair.card.set,
                                 mana_cost: cQPair.card.mana_cost,
-                                cmc: cQPair.card.cmc
+                                cmc: cQPair.card.cmc,
+                                set: cQPair.card.set,
+                                cn: cQPair.card.collector_number,
                             };
                             if (!deckData[prop][primaryType]) deckData[prop][primaryType] = [];
                             deckData[prop][primaryType].push(cardData);
