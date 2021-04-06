@@ -31,7 +31,7 @@
                     <span class="wubrg-g <%= deck.colors.includes('G') ? '' : 'wubrg-inactive' %>">{G}</span>
                 </div>
                 <div class="deck-buttons-container">
-                    <button disabled>Export</button>
+                    <button onclick="exportToClipboard()">Export</button>
                     <form action="/decks" method="post">
                         <input type="hidden" name="deckToClone" value="<%= deck.id %>">
                         <button type="submit" disabled>Clone</button>
@@ -70,21 +70,28 @@
     </div>
 </div>
 <br><br>
-<h3>Export</h3>
-<p>
-    <% for (const prop of ['mainDeck', 'sideboard']) { %>
-        
-        <% for (const cardType of ['Creature', 'Planeswalker', 'Instant', 'Sorcery', 'Artifact', 'Enchantment', 'Land']) { %>
-            <% if (deckData[prop][cardType] && deckData[prop][cardType].length) { %>
-                <% deckData[prop][cardType].forEach(card => { %>
-                    <%= card.quantity %> <%= card.name.replace(/^([^/]+)( \/+.+)?$/, '$1') %> (<%= card.set %>) <%= card.cn %><br>
-                <% }) %>
-            <% } %>
-        <% } %>
-        <br><%= prop === 'mainDeck' ? 'Sideboard' : '' %><br>
-    <% } %>
-</p>
+<!-- text for exporting - this is an abomination due to how whitespace is handled -->
+<p hidden id="exportable-decklist"><% for (const prop of ['mainDeck', 'sideboard']) { %><% for (const cardType of ['Creature', 'Planeswalker', 'Instant', 'Sorcery', 'Artifact', 'Enchantment', 'Land']) { %><% if (deckData[prop][cardType] && deckData[prop][cardType].length) { %><% deckData[prop][cardType].forEach(card => { %><%= card.quantity %> <%= card.name.replace(/^([^/]+)( \/+.+)?$/, '$1') %> (<%= card.set %>) <%= card.cn + "\n" %><% }) %><% } %><% } %><%= prop === 'mainDeck' ? '\nSideboard\n' : '' %><% } %></p>
 
+<%# legibly formatted version of the above abomination:
+for (const prop of ['mainDeck', 'sideboard']) {
+    for (const cardType of ['Creature', 'Planeswalker', 'Instant', 'Sorcery', 'Artifact', 'Enchantment', 'Land']) {
+        if (deckData[prop][cardType] && deckData[prop][cardType].length) {
+            deckData[prop][cardType].forEach(card => {
+                `${card.quantity} ${card.name.replace(/^([^/]+)( \/+.+)?$/, '$1')} (${card.set}) ${card.cn}\n`
+            })
+        }
+    }
+    prop === 'mainDeck' ? '\nSideboard\n' : ''
+}
+%>
+
+<script>
+    function exportToClipboard() {
+        const decklistText = document.getElementById("exportable-decklist");
+        navigator.clipboard.writeText(decklistText.textContent).then(function() {/* success */}, function() {/* failure */});
+    }
+</script>
 
 
 <%- include('../partials/footer') %>
