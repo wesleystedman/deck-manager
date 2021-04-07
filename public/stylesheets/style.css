@@ -1,3 +1,14 @@
+:root {
+  /* all mana colors referenced from MTGA */
+  --mana-white: #FDFEBE;
+  --mana-blue: #63C0F7;
+  /* --mana-black: #848484; */
+  --mana-black: #9F7DC2; 
+  --mana-red: #FC5350;
+  --mana-green: #17B666;
+  --mana-gray: #CAC3C0;
+}
+
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -61,32 +72,34 @@ nav {
 
 /* wubrg symbols */
 .wubrg-w, .wubrg-u, .wubrg-b, .wubrg-r, .wubrg-g {
-  width: 1em;
-  height: 1em;
+  display: inline-block;
+  text-align: center;
+  line-height: 2em;
+  width: 2em;
   border-radius: 50%;
 }
 
 .wubrg-w {
-  background-color: yellow;
+  background-color: var(--mana-white);
   background-image: none;
 }
 .wubrg-u {
-  background-color: blue;
+  background-color: var(--mana-blue);
   background-image: none;
 }
 .wubrg-b {
-  background-color: purple;
+  background-color: var(--mana-black);
   background-image: none;
 }
 .wubrg-r {
-  background-color: red;
+  background-color: var(--mana-red);
   background-image: none;
 }
 .wubrg-g {
-  background-color: green;
+  background-color: var(--mana-green);
   background-image: none;
 }
 .wubrg-inactive {
-  background-color: lightgray;
+  background-color: var(--mana-gray);
   /* add background image transformation */
 }
